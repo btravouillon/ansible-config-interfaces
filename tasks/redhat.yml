@@ -58,6 +58,9 @@
   ansible.builtin.template:
     src: etc/sysconfig/network-scripts/ifcfg.j2
     dest: "/etc/sysconfig/network-scripts/ifcfg-{{ item['name'] }}"
+    owner: root
+    group: root
+    mode: 0644
   register: config_interface
   become: true
   with_items: "{{ network_interfaces }}"
@@ -69,6 +72,9 @@
   ansible.builtin.template:
     src: etc/sysconfig/network-scripts/ifcfg.j2
     dest: "/etc/sysconfig/network-scripts/ifcfg-{{ item['name'] }}"
+    owner: root
+    group: root
+    mode: 0644
   register: config_bond
   become: true
   with_items: "{{ network_bonds }}"
@@ -80,6 +86,9 @@
   ansible.builtin.template:
     src: etc/sysconfig/network-scripts/ifcfg.j2
     dest: "/etc/sysconfig/network-scripts/ifcfg-{{ item['name'] }}"
+    owner: root
+    group: root
+    mode: 0644
   register: config_bridge
   become: true
   with_items: "{{ network_bridges }}"

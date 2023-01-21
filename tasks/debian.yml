@@ -41,7 +41,7 @@
     dest: /etc/network/interfaces
     owner: root
     group: root
-    mode: u=rw,g=r,o=r
+    mode: 0644
   register: config_interface
   become: true
   when: >
