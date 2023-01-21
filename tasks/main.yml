@@ -1,7 +1,8 @@
 ---
-# tasks file for ansible-config-interfaces
-- ansible.builtin.include_tasks: debian.yml
+- name: Include tasks for Debian-like OS
+  ansible.builtin.include_tasks: debian.yml
   when: ansible_os_family == "Debian"
 
-- ansible.builtin.include_tasks: redhat.yml
+- name: Include tasks for RHEL-like OS
+  ansible.builtin.include_tasks: redhat.yml
   when: ansible_os_family == "RedHat"
