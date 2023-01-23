@@ -1,6 +1,6 @@
 ---
 - name: redhat | Enabling EPEL repo
-  yum:
+  ansible.builtin.yum:
     name: ["epel-release"]
     state: present
   become: true
@@ -9,18 +9,18 @@
   when: ansible_distribution != "Fedora"
 
 - name: redhat | Installing Pre-Reqs
-  yum:
+  ansible.builtin.yum:
     name: ["lldpd"]
     state: present
   become: true
   register: result
   until: result is successful
   when:
-  - config_install_lldp | bool
-  - ansible_distribution != "Fedora"
+    - config_install_lldp | bool
+    - ansible_distribution != "Fedora"
 
 - name: redhat | Installing bridge-utils
-  yum:
+  ansible.builtin.yum:
     name: ["bridge-utils"]
   become: true
   register: result
@@ -30,7 +30,7 @@
     ansible_distribution != "Fedora"
 
 - name: redhat | Installing VLAN Packages
-  yum:
+  ansible.builtin.yum:
     name: ["vconfig"]
     state: present
   become: true
@@ -41,23 +41,26 @@
     ansible_distribution != "Fedora"
 
 - name: redhat | Enabling Bonding
-  modprobe:
+  community.general.modprobe:
     name: bonding
     state: present
   become: true
   when: config_network_bonds
 
 - name: redhat | Enabling Bridging
-  modprobe:
+  community.general.modprobe:
     name: bridge
     state: present
   become: true
   when: config_network_bridges
 
 - name: redhat | Configuring Interfaces
-  template:
+  ansible.builtin.template:
     src: etc/sysconfig/network-scripts/ifcfg.j2
     dest: "/etc/sysconfig/network-scripts/ifcfg-{{ item['name'] }}"
+    owner: root
+    group: root
+    mode: 0644
   register: config_interface
   become: true
   with_items: "{{ network_interfaces }}"
@@ -66,9 +69,12 @@
     item['configure']
 
 - name: redhat | Configuring Bonds
-  template:
+  ansible.builtin.template:
     src: etc/sysconfig/network-scripts/ifcfg.j2
     dest: "/etc/sysconfig/network-scripts/ifcfg-{{ item['name'] }}"
+    owner: root
+    group: root
+    mode: 0644
   register: config_bond
   become: true
   with_items: "{{ network_bonds }}"
@@ -77,9 +83,12 @@
     item['configure']
 
 - name: redhat | Configuring Bridges
-  template:
+  ansible.builtin.template:
     src: etc/sysconfig/network-scripts/ifcfg.j2
     dest: "/etc/sysconfig/network-scripts/ifcfg-{{ item['name'] }}"
+    owner: root
+    group: root
+    mode: 0644
   register: config_bridge
   become: true
   with_items: "{{ network_bridges }}"
@@ -88,7 +97,7 @@
     item['configure']
 
 - name: redhat | Restarting Network Bonds
-  shell: bash -c "ifdown {{ item['item']['name'] }} && ifup {{ item['item']['name'] }}"
+  ansible.builtin.shell: bash -c "ifdown {{ item['item']['name'] }} && ifup {{ item['item']['name'] }}"
   become: true
   with_items: "{{ config_bond['results'] }}"
   when: >
@@ -98,7 +107,7 @@
     item['changed']
 
 - name: redhat | Restarting Network Bridges
-  shell: bash -c "ifdown {{ item['item']['name'] }} && ifup {{ item['item']['name'] }}"
+  ansible.builtin.shell: bash -c "ifdown {{ item['item']['name'] }} && ifup {{ item['item']['name'] }}"
   become: true
   with_items: "{{ config_bridge['results'] }}"
   when: >
@@ -108,7 +117,7 @@
     item['changed']
 
 - name: redhat | Restarting Network Interfaces
-  shell: bash -c "ifdown {{ item['item']['name'] }} && ifup {{ item['item']['name'] }}"
+  ansible.builtin.shell: bash -c "ifdown {{ item['item']['name'] }} && ifup {{ item['item']['name'] }}"
   become: true
   with_items: "{{ config_interface['results'] }}"
   when: >

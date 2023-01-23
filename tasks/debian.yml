@@ -1,6 +1,6 @@
 ---
 - name: debian | Installing Pre-Req Packages
-  apt:
+  ansible.builtin.apt:
     name: ["lldpd"]
     state: present
   become: true
@@ -9,7 +9,7 @@
   when: config_install_lldp | bool
 
 - name: debian | Installing bridge-utils
-  apt:
+  ansible.builtin.apt:
     name: ["bridge-utils"]
     state: present
   become: true
@@ -18,7 +18,7 @@
   when: config_network_bridges
 
 - name: debian | Installing Bonding Packages
-  apt:
+  ansible.builtin.apt:
     name: ["ifenslave"]
     state: present
   become: true
@@ -27,7 +27,7 @@
   when: config_network_bonds
 
 - name: debian | Installing VLAN Packages
-  apt:
+  ansible.builtin.apt:
     name: ["vlan"]
     state: present
   become: true
@@ -36,12 +36,12 @@
   when: config_network_vlans
 
 - name: debian | Configuring Defined Interfaces
-  template:
+  ansible.builtin.template:
     src: "{{ config_interface_template }}"
     dest: /etc/network/interfaces
     owner: root
     group: root
-    mode: u=rw,g=r,o=r
+    mode: 0644
   register: config_interface
   become: true
   when: >
@@ -49,7 +49,7 @@
     config_network_interfaces)
 
 - name: debian | Restarting Network Interfaces
-  shell: bash -c "ifdown {{ item.name }} --force && ifup {{ item.name }} --force"
+  ansible.builtin.shell: bash -c "ifdown {{ item.name }} --force && ifup {{ item.name }} --force"
   become: true
   with_items: "{{ network_interfaces }}"
   when: >
@@ -58,7 +58,7 @@
     config_interface['changed']
 
 - name: debian | Restarting Network VLANs
-  shell: bash -c "ifdown {{ item.name }} --force && ifup {{ item.name }} --force"
+  ansible.builtin.shell: bash -c "ifdown {{ item.name }} --force && ifup {{ item.name }} --force"
   become: true
   with_items: "{{ network_vlans }}"
   when: >
@@ -68,7 +68,7 @@
     config_interface['changed']
 
 - name: debian | Restarting Network Bridges
-  shell: bash -c "ifdown {{ item.name }} --force && ifup {{ item.name }} --force"
+  ansible.builtin.shell: bash -c "ifdown {{ item.name }} --force && ifup {{ item.name }} --force"
   become: true
   with_items: "{{ network_bridges }}"
   when: >
@@ -78,7 +78,7 @@
     config_interface['changed']
 
 - name: debian | Restarting OVS Bridges
-  shell: bash -c "ifdown {{ item.name }} --force && ifup {{ item.name }} --force"
+  ansible.builtin.shell: bash -c "ifdown {{ item.name }} --force && ifup {{ item.name }} --force"
   become: true
   with_items: "{{ ovs_bridges }}"
   when: >
@@ -88,7 +88,7 @@
     config_interface['changed']
 
 - name: debian | Restarting OVS Bonds
-  shell: bash -c "ifdown {{ item.name }} --force && ifup {{ item.name }} --force"
+  ansible.builtin.shell: bash -c "ifdown {{ item.name }} --force && ifup {{ item.name }} --force"
   become: true
   with_items: "{{ ovs_bonds }}"
   when: >
@@ -98,7 +98,7 @@
     config_interface['changed']
 
 - name: debian | Restarting OVS Interfaces
-  shell: bash -c "ifdown {{ item.name }} --force && ifup {{ item.name }} --force"
+  ansible.builtin.shell: bash -c "ifdown {{ item.name }} --force && ifup {{ item.name }} --force"
   become: true
   with_items: "{{ ovs_interfaces }}"
   when: >

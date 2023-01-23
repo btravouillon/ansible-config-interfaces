@@ -5,13 +5,13 @@ galaxy_info:
 
   license: MIT
 
-  min_ansible_version: 1.2
+  min_ansible_version: '1.2'
 
   platforms:
     - name: EL
       versions:
-        - 6
-        - 7
+        - '6'
+        - '7'
     - name: Ubuntu
       versions:
         - all
@@ -19,7 +19,7 @@ galaxy_info:
       versions:
         - all
 
-  categories:
+  galaxy_tags:
     - networking
     - system
 dependencies: []

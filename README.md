@@ -42,7 +42,7 @@ SSID and key.
 
 ## Example Playbook
 
-[Example Playbook](playbook.yml)
+[Example Playbook](examples/playbook.yml)
 
 ## Examples
 
