@@ -6,7 +6,7 @@
   become: true
   register: result
   until: result is successful
-  when: ansible_distribution != "Fedora"
+  when: ansible_facts['distribution'] != "Fedora"
 
 - name: redhat | Installing Pre-Reqs
   ansible.builtin.yum:
@@ -17,7 +17,7 @@
   until: result is successful
   when:
     - config_install_lldp | bool
-    - ansible_distribution != "Fedora"
+    - ansible_facts['distribution'] != "Fedora"
 
 - name: redhat | Installing bridge-utils
   ansible.builtin.yum:
@@ -27,7 +27,7 @@
   until: result is successful
   when: >
     config_network_bridges and
-    ansible_distribution != "Fedora"
+    ansible_facts['distribution'] != "Fedora"
 
 - name: redhat | Installing VLAN Packages
   ansible.builtin.yum:
@@ -38,7 +38,7 @@
   until: result is successful
   when: >
     config_network_vlans and
-    ansible_distribution != "Fedora"
+    ansible_facts['distribution'] != "Fedora"
 
 - name: redhat | Enabling Bonding
   community.general.modprobe:
