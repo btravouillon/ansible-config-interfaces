@@ -30,7 +30,7 @@ dns_nameservers:
   - 8.8.4.4
 
 # Defines your global dns suffix search
-dns_search: "{{ pri_domain_name }}"
+# dns_search: example.org
 
 # Defines if interfaces, bonds, bridges, vlans, ovs_bonds, ovs_bridges and
 # ovs_interfaces should be brought up after defining. This can be overridden
@@ -198,8 +198,6 @@ ovs_interfaces:
   #   #   - opt: vlan_mode
   #   #     val: access
   #   # parameters:
-
-pri_domain_name: example.org
 
 # Install or not lldp
 config_install_lldp: true

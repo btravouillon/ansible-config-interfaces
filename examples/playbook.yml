@@ -77,7 +77,7 @@
         configure: true
         comment: br0 member
         method: manual
-    pri_domain_name: test.vagrant.local
+    dns_search: test.vagrant.local
   roles:
     - role: ansible-openvswitch
     - role: ansible-config-interfaces
