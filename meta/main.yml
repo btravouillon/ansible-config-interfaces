@@ -1,6 +1,8 @@
 ---
 galaxy_info:
-  author: Larry Smith Jr.
+  namespace: btravouillon
+  role_name: ifupdown
+  author: Bruno Travouillon
   description: An [Ansible](https://www.ansible.com) role to configure network interfaces
 
   license: MIT
@@ -10,8 +12,8 @@ galaxy_info:
   platforms:
     - name: EL
       versions:
-        - '6'
         - '7'
+        - '8'
     - name: Ubuntu
       versions:
         - all
