@@ -200,4 +200,4 @@ ovs_interfaces:
   #   # parameters:
 
 # Install or not lldp
-config_install_lldp: true
+config_install_lldp: false
