@@ -1,0 +1,17 @@
+---
+name: Molecule unit testing
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  molecule:
+    name: Molecule test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Run Molecule
+        uses: gofrolist/molecule-action@v2
