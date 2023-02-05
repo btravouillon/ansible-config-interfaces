@@ -1,4 +1,14 @@
 ---
+- name: debian | Installing ifupdown
+  ansible.builtin.apt:
+    name:
+      - "{{ ifupdown_package }}"
+    state: present
+  become: true
+  register: result
+  until: result is successful
+  when: ifupdown_package is defined
+
 - name: debian | Installing Pre-Req Packages
   ansible.builtin.apt:
     name: ["lldpd"]
