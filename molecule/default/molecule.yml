@@ -16,12 +16,6 @@ platforms:
   - name: jammy
     image: geerlingguy/docker-ubuntu2204-ansible:latest
     pre_build_image: true
-  - name: centos7
-    image: geerlingguy/docker-centos7-ansible:latest
-    pre_build_image: true
-  - name: rockylinux8
-    image: geerlingguy/docker-rockylinux8-ansible:latest
-    pre_build_image: true
 provisioner:
   name: ansible
 verifier:
