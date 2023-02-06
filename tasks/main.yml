@@ -1,8 +1,128 @@
 ---
-- name: Include tasks for Debian-like OS
-  ansible.builtin.include_tasks: debian.yml
-  when: ansible_facts['os_family'] == "Debian"
+- name: Installing ifupdown
+  ansible.builtin.apt:
+    name:
+      - "{{ ifupdown_package }}"
+    state: present
+  become: true
+  register: result
+  until: result is successful
+  when: ifupdown_package is defined
 
-- name: Include tasks for RHEL-like OS
-  ansible.builtin.include_tasks: redhat.yml
-  when: ansible_facts['os_family'] == "RedHat"
+- name: Installing Pre-Req Packages
+  ansible.builtin.apt:
+    name: ["lldpd"]
+    state: present
+  become: true
+  register: result
+  until: result is successful
+  when: config_install_lldp | bool
+
+- name: Installing bridge-utils
+  ansible.builtin.apt:
+    name: ["bridge-utils"]
+    state: present
+  become: true
+  register: result
+  until: result is successful
+  when: config_network_bridges
+
+- name: Installing Bonding Packages
+  ansible.builtin.apt:
+    name: ["ifenslave"]
+    state: present
+  become: true
+  register: result
+  until: result is successful
+  when: config_network_bonds
+
+- name: Installing VLAN Packages
+  ansible.builtin.apt:
+    name: ["vlan"]
+    state: present
+  become: true
+  register: result
+  until: result is successful
+  when: config_network_vlans
+
+- name: Configuring Defined Interfaces
+  ansible.builtin.template:
+    src: "{{ config_interface_template }}"
+    dest: /etc/network/interfaces
+    owner: root
+    group: root
+    mode: 0644
+  register: config_interface
+  become: true
+  when: >
+    (config_network_interfaces is defined and
+    config_network_interfaces)
+
+- name: Restarting Network Interfaces
+  ansible.builtin.shell: bash -c "ifdown {{ item.name }} --force && ifup {{ item.name }} --force"
+  become: true
+  with_items: "{{ network_interfaces }}"
+  when: >
+    (enable_configured_interfaces_after_defining or item['enable']) and
+    item['configure'] and
+    config_interface['changed']
+
+- name: Restarting Network VLANs
+  ansible.builtin.shell: bash -c "ifdown {{ item.name }} --force && ifup {{ item.name }} --force"
+  become: true
+  with_items: "{{ network_vlans }}"
+  when: >
+    config_network_vlans and
+    (enable_configured_interfaces_after_defining or item['enable']) and
+    item['configure'] and
+    config_interface['changed']
+
+- name: Restarting Network Bridges
+  ansible.builtin.shell: bash -c "ifdown {{ item.name }} --force && ifup {{ item.name }} --force"
+  become: true
+  with_items: "{{ network_bridges }}"
+  when: >
+    config_network_bridges and
+    (enable_configured_interfaces_after_defining or item['enable']) and
+    item['configure'] and
+    config_interface['changed']
+
+- name: Restarting OVS Bridges
+  ansible.builtin.shell: bash -c "ifdown {{ item.name }} --force && ifup {{ item.name }} --force"
+  become: true
+  with_items: "{{ ovs_bridges }}"
+  when: >
+    config_ovs_bridges and
+    (enable_configured_interfaces_after_defining or item['enable']) and
+    item['configure'] and
+    config_interface['changed']
+
+- name: Restarting OVS Bonds
+  ansible.builtin.shell: bash -c "ifdown {{ item.name }} --force && ifup {{ item.name }} --force"
+  become: true
+  with_items: "{{ ovs_bonds }}"
+  when: >
+    config_ovs_bonds and
+    (enable_configured_interfaces_after_defining or item['enable']) and
+    item['configure'] and
+    config_interface['changed']
+
+- name: Restarting OVS Interfaces
+  ansible.builtin.shell: bash -c "ifdown {{ item.name }} --force && ifup {{ item.name }} --force"
+  become: true
+  with_items: "{{ ovs_interfaces }}"
+  when: >
+    config_ovs_interfaces and
+    (enable_configured_interfaces_after_defining or item['enable']) and
+    item['configure'] and
+    config_interface['changed']
+
+- name: Restarting OVS Ports
+  ansible.builtin.shell: bash -c "ifdown {{ item.name }} --force && ifup {{ item.name }} --force"
+  become: true
+  with_items: "{{ ovs_ports }}"
+  when: >
+    config_ovs_ports and
+    (enable_configured_interfaces_after_defining or item['enable']) and
+    item['configure'] and
+    config_interface['changed']
