@@ -1,0 +1,61 @@
+---
+- name: Converge
+  hosts: all
+  vars:
+    ifupdown_package: ifupdown
+
+    config_network_interfaces: true
+    network_interfaces:
+      - name: eth0
+        configure: true
+        enable: false
+        comment: "Keep CEPH traffic isolated from vSwitch / VM traffic"
+        method: static
+        address: 10.11.0.10
+        netmask: 255.255.0.0
+
+    config_ovs_bridges: true
+    ovs_bridges:
+      - name: vmbr0
+        configure: true
+        enable: false
+        comment: |-
+          Bridge (vSwitch) for our physical interfaces and vlan virtual interfaces
+        method: manual
+        ports:
+          - eth1
+          - vlan25
+
+    config_ovs_interfaces: true
+    ovs_interfaces:
+      - name: vlan25
+        configure: true
+        enable: false
+        comment: "Virtual interface for Proxmox / Corosync traffic"
+        bridge: vmbr0
+        method: static
+        options:
+          - opt: tag
+            val: 25
+        address: 10.12.0.10
+        netmask: 255.255.0.0
+        gateway: 10.12.0.254
+
+    config_ovs_ports: true
+    ovs_ports:
+      - name: eth1
+        configure: true
+        enable: false
+        comment: Physical interface for traffic coming into the system.
+        bridge: vmbr0
+        method: manual
+        options:
+          - opt: tag
+            val: 25
+          - opt: vlan_mode
+            val: native-untagged
+
+  tasks:
+    - name: "Include btravouillon.ifupdown"
+      ansible.builtin.include_role:
+        name: "btravouillon.ifupdown"

@@ -1,0 +1,77 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Check if ifupdown is installed
+      ansible.builtin.package_facts:
+        manager: auto
+
+    - name: Assert ifupdown is installed
+      ansible.builtin.assert:
+        that: "'ifupdown' in ansible_facts.packages"
+
+    - name: Read /etc/network/interfaces
+      ansible.builtin.slurp:
+        src: /etc/network/interfaces
+      register: interfaces_conf
+
+    - name: Display /etc/network/interfaces
+      ansible.builtin.debug:
+        msg: "{{ interfaces_conf['content'] | b64decode }}"
+
+    - name: Check Network Interfaces
+      ansible.builtin.assert:
+        that: interfaces_conf['content'] | b64decode |
+                regex_search(("^{{ item }}$"), multiline=true)
+      loop:
+        - "# Keep CEPH traffic isolated from vSwitch / VM traffic"
+        - "auto eth0"
+        - "iface eth0 inet static"
+        - "  address 10.11.0.10"
+        - "  netmask 255.255.0.0"
+
+    - name: Check OVS Briges
+      ansible.builtin.assert:
+        that: interfaces_conf['content'] | b64decode |
+                regex_search(("^{{ item }}$"), multiline=true)
+      loop:
+        - "# Bridge .vSwitch. for our physical interfaces and vlan virtual interfaces"
+        - "auto vmbr0"
+        - "iface vmbr0 inet manual"
+        - "  ovs_type OVSBridge"
+        - "  ovs_ports eth1 vlan25"
+
+    - name: Check OVS Interfaces
+      ansible.builtin.assert:
+        that: interfaces_conf['content'] | b64decode |
+                regex_search(("^{{ item }}$"), multiline=true)
+      loop:
+        - "# Virtual interface for Proxmox / Corosync traffic"
+        - "auto vlan25"
+        - "allow-vmbr0 vlan25"
+        - "iface vlan25 inet static"
+        - "  address 10.12.0.10"
+        - "  netmask 255.255.0.0"
+        - "  gateway 10.12.0.254"
+        - "  ovs_bridge vmbr0"
+        - "  ovs_type OVSIntPort"
+        - "  ovs_options tag=25"
+
+    - name: Check OVS Ports
+      ansible.builtin.assert:
+        that: interfaces_conf['content'] | b64decode |
+                regex_search(("^{{ item }}$"), multiline=true)
+      loop:
+        - "# Physical interface for traffic coming into the system."
+        - "auto eth1"
+        - "allow-vmbr0 eth1"
+        - "iface eth1 inet manual"
+        - "  ovs_bridge vmbr0"
+        - "  ovs_type OVSPort"
+        - "  ovs_options tag=25 vlan_mode=native-untagged"
+
+    - name: Check dns-nameservers
+      ansible.builtin.assert:
+        that: interfaces_conf['content'] | b64decode |
+                regex_search(("^dns-nameservers 8.8.8.8 8.8.4.4$"), multiline=true)
