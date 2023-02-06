@@ -10,8 +10,16 @@ jobs:
   molecule:
     name: Molecule test
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        scenario:
+          - default
+          - ovs
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Run Molecule
         uses: gofrolist/molecule-action@v2
+        with:
+          molecule_args: --scenario-name ${{ matrix.scenario }}
