@@ -3,7 +3,7 @@
 
 **Table of Contents** _generated with [DocToc](https://github.com/thlorenz/doctoc)_
 
-- [ansible-config-interfaces](#ansible-config-interfaces)
+- [ifupdown](#ifupdown)
   - [Requirements](#requirements)
   - [Role Variables](#role-variables)
   - [Dependencies](#dependencies)
@@ -13,10 +13,11 @@
     - [Example (Open vSwitch) `/etc/network/interfaces`:](#example-open-vswitch-etcnetworkinterfaces)
   - [License](#license)
   - [Author Information](#author-information)
+  - [Original Author Information](#original-author-information)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-# ansible-config-interfaces
+# ifupdown
 
 An [Ansible](https://www.ansible.com) role to configure network interfaces
 
@@ -24,12 +25,19 @@ An [Ansible](https://www.ansible.com) role to configure network interfaces
 - Create VLAN, bonds, bridges, and interfaces
 - Create Open vSwitch bridges, bonds, and interfaces
 
+This role is a fork of
+[config-interfaces](https://galaxy.ansible.com/mrlesmithjr/config-interfaces),
+however both roles are not interchangeable. To replace one role with the other,
+one would have to update their inventory.
+
 ## Requirements
 
-See [Example Playbook](#example-playbook) for examples of how to define specific
-network configurations.
+See [Example Playbook](#example-playbook) for examples of how to define
+specific network configurations.
 
-> NOTE: If creating Open vSwitch configurations you will need to use the [ansible-openvswitch](https://github.com/mrlesmithjr/ansible-openvswitch) [Ansible](https://www.ansible.com) role
+> NOTE: If creating Open vSwitch configurations you will need to use the
+> [ansible-openvswitch](https://github.com/mrlesmithjr/ansible-openvswitch)
+> [Ansible](https://www.ansible.com) role
 
 ## Role Variables
 
@@ -176,6 +184,12 @@ dns-search test.vagrant.local
 MIT
 
 ## Author Information
+
+Bruno Travouillon
+
+- [btravouillon](https://github.com/btravouillon)
+
+## Original Author Information
 
 Larry Smith Jr.
 
