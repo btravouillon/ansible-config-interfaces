@@ -5,7 +5,7 @@
 auto lo
 iface lo inet loopback
 
-{% if config_network_interfaces is defined and config_network_interfaces and network_interfaces != [] %}
+{% if network_interfaces | length > 0 %}
 ########## Network Interfaces
   {% for interface in network_interfaces %}
     {% if interface['configure'] is defined and interface['configure'] %}
@@ -44,7 +44,7 @@ iface {{ interface['name'] }} inet {{ interface['method']|lower }}
 ########## End of Network Interfaces
 {% endif %}
 
-{% if config_network_bonds is defined and config_network_bonds %}
+{% if network_bonds | length > 0 %}
 ########## Network Bonds
   {% for bond in network_bonds %}
     {% if bond['configure'] is defined and bond['configure'] %}
@@ -78,7 +78,7 @@ iface {{ bond['name'] }} inet {{ bond['method']|lower }}
 ########## End of Network Bonds
 {% endif %}
 
-{% if config_network_vlans is defined and config_network_vlans %}
+{% if network_vlans | length > 0 %}
 ########## Network VLANS
   {% for vlan in network_vlans %}
     {% if vlan['configure'] is defined and vlan['configure'] %}
@@ -114,7 +114,7 @@ iface {{ vlan['name'] }} inet {{ vlan['method']|lower }}
 ########## End of Network VLANS
 {% endif %}
 
-{% if config_network_bridges is defined and config_network_bridges %}
+{% if network_bridges | length > 0 %}
 ########## Network Bridges
   {% for bridge in network_bridges %}
     {% if bridge['configure'] is defined and bridge['configure'] %}
@@ -150,7 +150,7 @@ iface {{ bridge['name'] }} inet {{ bridge['method']|lower }}
 ########## End of Network Bridges
 {% endif %}
 
-{% if config_ovs_bonds is defined and config_ovs_bonds %}
+{% if ovs_bonds | length > 0 %}
 ########## OVS Bonds
   {% for ovs_bond in ovs_bonds %}
     {% if ovs_bond['configure'] is defined and ovs_bond['configure'] %}
@@ -188,7 +188,7 @@ iface {{ ovs_bond['name'] }} inet {{ ovs_bond['method']|lower }}
 ########## End of OVS Bonds
 {% endif %}
 
-{% if config_ovs_bridges is defined and config_ovs_bridges %}
+{% if ovs_bridges | length > 0 %}
 ########## OVS Bridges
   {% for ovs_bridge in ovs_bridges %}
     {% if ovs_bridge['configure'] is defined and ovs_bridge['configure'] %}
@@ -226,7 +226,7 @@ iface {{ ovs_bridge['name'] }} inet {{ ovs_bridge['method']|lower }}
 ########## End of OVS Bridges
 {% endif %}
 
-{% if config_ovs_interfaces is defined and config_ovs_interfaces %}
+{% if ovs_interfaces | length > 0 %}
 ########## OVS Interfaces
   {% for ovs_interface in ovs_interfaces %}
     {% if ovs_interface['configure'] is defined and ovs_interface['configure'] %}
@@ -264,7 +264,7 @@ iface {{ ovs_interface['name'] }} inet {{ ovs_interface['method']|lower }}
 ########## End of OVS Interfaces
 {% endif %}
 
-{% if config_ovs_ports is defined and config_ovs_ports %}
+{% if ovs_ports | length > 0 %}
 ########## OVS Ports
 {%   for item in ovs_ports %}
 {%     if item['configure'] is defined and item['configure'] %}

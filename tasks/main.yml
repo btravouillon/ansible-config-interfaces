@@ -25,7 +25,7 @@
   become: true
   register: result
   until: result is successful
-  when: config_network_bridges
+  when: network_bridges | length > 0
 
 - name: Installing Bonding Packages
   ansible.builtin.apt:
@@ -34,7 +34,7 @@
   become: true
   register: result
   until: result is successful
-  when: config_network_bonds
+  when: network_bonds | length > 0
 
 - name: Installing VLAN Packages
   ansible.builtin.apt:
@@ -43,7 +43,7 @@
   become: true
   register: result
   until: result is successful
-  when: config_network_vlans
+  when: network_vlans | length > 0
 
 - name: Configuring Defined Interfaces
   ansible.builtin.template:
@@ -54,9 +54,7 @@
     mode: 0644
   register: config_interface
   become: true
-  when: >
-    (config_network_interfaces is defined and
-    config_network_interfaces)
+  when: network_interfaces | length > 0
 
 - name: Restarting Network Interfaces
   ansible.builtin.shell: bash -c "ifdown {{ item.name }} --force && ifup {{ item.name }} --force"
@@ -72,7 +70,7 @@
   become: true
   with_items: "{{ network_vlans }}"
   when: >
-    config_network_vlans and
+    network_vlans | length > 0 and
     (enable_configured_interfaces_after_defining or item['enable']) and
     item['configure'] and
     config_interface['changed']
@@ -82,7 +80,7 @@
   become: true
   with_items: "{{ network_bridges }}"
   when: >
-    config_network_bridges and
+    network_bridges | length > 0 and
     (enable_configured_interfaces_after_defining or item['enable']) and
     item['configure'] and
     config_interface['changed']
@@ -92,7 +90,7 @@
   become: true
   with_items: "{{ ovs_bridges }}"
   when: >
-    config_ovs_bridges and
+    ovs_bridges | length > 0 and
     (enable_configured_interfaces_after_defining or item['enable']) and
     item['configure'] and
     config_interface['changed']
@@ -102,7 +100,7 @@
   become: true
   with_items: "{{ ovs_bonds }}"
   when: >
-    config_ovs_bonds and
+    ovs_bonds | length > 0 and
     (enable_configured_interfaces_after_defining or item['enable']) and
     item['configure'] and
     config_interface['changed']
@@ -112,7 +110,7 @@
   become: true
   with_items: "{{ ovs_interfaces }}"
   when: >
-    config_ovs_interfaces and
+    ovs_interfaces | length > 0 and
     (enable_configured_interfaces_after_defining or item['enable']) and
     item['configure'] and
     config_interface['changed']
@@ -122,7 +120,7 @@
   become: true
   with_items: "{{ ovs_ports }}"
   when: >
-    config_ovs_ports and
+    ovs_ports | length > 0 and
     (enable_configured_interfaces_after_defining or item['enable']) and
     item['configure'] and
     config_interface['changed']
