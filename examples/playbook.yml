@@ -77,5 +77,5 @@
     ifupdown_dns_search: test.vagrant.local
   roles:
     - role: ansible-openvswitch
-    - role: ansible-config-interfaces
+    - role: ifupdown
   tasks:

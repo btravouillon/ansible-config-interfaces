@@ -1,6 +1,5 @@
 ---
-# defaults file for ansible-config-interfaces
-
+# Path to the template file for interfaces
 ifupdown_interface_template: etc/network/interfaces.j2
 
 # Define the name of the package which installs ifupdown
