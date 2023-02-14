@@ -1,9 +1,6 @@
 ---
 - hosts: test-nodes
   vars:
-    config_network_bonds: true
-    config_network_bridges: true
-    config_network_interfaces: true
     enable_configured_interfaces_after_defining: true
     network_bonds:
       - name: bond0
