@@ -1,26 +1,26 @@
 ---
 # defaults file for ansible-config-interfaces
 
-config_interface_template: etc/network/interfaces.j2
+ifupdown_interface_template: etc/network/interfaces.j2
 
 # Define the name of the package which installs ifupdown
 # ifupdown_package: "ifupdown"
 
 # Defines all dns servers to configure
-dns_nameservers:
+ifupdown_dns_nameservers:
   - 8.8.8.8
   - 8.8.4.4
 
 # Defines your global dns suffix search
-# dns_search: example.org
+# ifupdown_dns_search: example.org
 
 # Defines if interfaces, bonds, bridges, vlans, ovs_bonds, ovs_bridges and
 # ovs_interfaces should be brought up after defining. This can be overridden
 # with the `enable` option per interface. Please see the examples below.
-enable_configured_interfaces_after_defining: false
+ifupdown_enable_configured_interfaces_after_defining: false
 
 # Defines non Open vSwitch network bonds
-network_bonds:
+ifupdown_network_bonds:
   []
   # - name: bond0
   #   address: 192.168.1.10
@@ -45,7 +45,7 @@ network_bonds:
   #     - enp0s10
 
 # Defines non Open vSwitch network bridges
-network_bridges:
+ifupdown_network_bridges:
   []
   # - name: br0
   #   configure: true
@@ -67,7 +67,7 @@ network_bridges:
   #     - enp0s16
 
 # Defines non Open vSwitch network interfaces
-network_interfaces:
+ifupdown_network_interfaces:
   []
   # - name: enp0s3
   #   configure: true
@@ -101,7 +101,7 @@ network_interfaces:
   #   method: manual
 
 # Defines non Open vSwitch network vlans
-network_vlans:
+ifupdown_network_vlans:
   []
   # - name: enp0s8.100
   #   configure: true
@@ -115,7 +115,7 @@ network_vlans:
   #   vlan_device: enp0s8
 
 # Defines Open vSwitch bonds
-ovs_bonds:
+ifupdown_ovs_bonds:
   []
   # - name: bond0
   #   # address:
@@ -140,7 +140,7 @@ ovs_bonds:
   #     - enp0s10
 
 # Defines Open vSwitch bridges
-ovs_bridges:
+ifupdown_ovs_bridges:
   []
   # - name: vmbr0
   #   # address:
@@ -164,7 +164,7 @@ ovs_bridges:
   #     - vlan1
 
 # Defines Open vSwitch interfaces
-ovs_interfaces:
+ifupdown_ovs_interfaces:
   []
   # - name: vlan1
   #   address:
@@ -182,8 +182,8 @@ ovs_interfaces:
   #   # parameters:
 
 # Defines Open vSwitch ports
-ovs_ports:
+ifupdown_ovs_ports:
   []
 
 # Install or not lldp
-config_install_lldp: false
+ifupdown_install_lldp: false

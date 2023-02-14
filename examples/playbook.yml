@@ -1,8 +1,8 @@
 ---
 - hosts: test-nodes
   vars:
-    enable_configured_interfaces_after_defining: true
-    network_bonds:
+    ifupdown_enable_configured_interfaces_after_defining: true
+    ifupdown_network_bonds:
       - name: bond0
         address: 192.168.1.10
         netmask: 255.255.255.0
@@ -24,7 +24,7 @@
         slaves:
           - enp0s9
           - enp0s10
-    network_bridges:
+    ifupdown_network_bridges:
       - name: br0
         configure: true
         enable: false
@@ -43,7 +43,7 @@
           #   val: 10.0.106.1
         ports:
           - enp0s16
-    network_interfaces:
+    ifupdown_network_interfaces:
       - name: enp0s3
         configure: true
         enable: false
@@ -74,7 +74,7 @@
         configure: true
         comment: br0 member
         method: manual
-    dns_search: test.vagrant.local
+    ifupdown_dns_search: test.vagrant.local
   roles:
     - role: ansible-openvswitch
     - role: ansible-config-interfaces
