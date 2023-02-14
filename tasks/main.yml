@@ -16,7 +16,7 @@
   become: true
   register: result
   until: result is successful
-  when: config_install_lldp | bool
+  when: ifupdown_install_lldp | bool
 
 - name: Installing bridge-utils
   ansible.builtin.apt:
@@ -25,7 +25,7 @@
   become: true
   register: result
   until: result is successful
-  when: network_bridges | length > 0
+  when: ifupdown_network_bridges | length > 0
 
 - name: Installing Bonding Packages
   ansible.builtin.apt:
@@ -34,7 +34,7 @@
   become: true
   register: result
   until: result is successful
-  when: network_bonds | length > 0
+  when: ifupdown_network_bonds | length > 0
 
 - name: Installing VLAN Packages
   ansible.builtin.apt:
@@ -43,84 +43,84 @@
   become: true
   register: result
   until: result is successful
-  when: network_vlans | length > 0
+  when: ifupdown_network_vlans | length > 0
 
 - name: Configuring Defined Interfaces
   ansible.builtin.template:
-    src: "{{ config_interface_template }}"
+    src: "{{ ifupdown_interface_template }}"
     dest: /etc/network/interfaces
     owner: root
     group: root
     mode: 0644
   register: config_interface
   become: true
-  when: network_interfaces | length > 0
+  when: ifupdown_network_interfaces | length > 0
 
 - name: Restarting Network Interfaces
   ansible.builtin.shell: bash -c "ifdown {{ item.name }} --force && ifup {{ item.name }} --force"
   become: true
-  with_items: "{{ network_interfaces }}"
+  with_items: "{{ ifupdown_network_interfaces }}"
   when: >
-    (enable_configured_interfaces_after_defining or item['enable']) and
+    (ifupdown_enable_configured_interfaces_after_defining or item['enable']) and
     item['configure'] and
     config_interface['changed']
 
 - name: Restarting Network VLANs
   ansible.builtin.shell: bash -c "ifdown {{ item.name }} --force && ifup {{ item.name }} --force"
   become: true
-  with_items: "{{ network_vlans }}"
+  with_items: "{{ ifupdown_network_vlans }}"
   when: >
-    network_vlans | length > 0 and
-    (enable_configured_interfaces_after_defining or item['enable']) and
+    ifupdown_network_vlans | length > 0 and
+    (ifupdown_enable_configured_interfaces_after_defining or item['enable']) and
     item['configure'] and
     config_interface['changed']
 
 - name: Restarting Network Bridges
   ansible.builtin.shell: bash -c "ifdown {{ item.name }} --force && ifup {{ item.name }} --force"
   become: true
-  with_items: "{{ network_bridges }}"
+  with_items: "{{ ifupdown_network_bridges }}"
   when: >
-    network_bridges | length > 0 and
-    (enable_configured_interfaces_after_defining or item['enable']) and
+    ifupdown_network_bridges | length > 0 and
+    (ifupdown_enable_configured_interfaces_after_defining or item['enable']) and
     item['configure'] and
     config_interface['changed']
 
 - name: Restarting OVS Bridges
   ansible.builtin.shell: bash -c "ifdown {{ item.name }} --force && ifup {{ item.name }} --force"
   become: true
-  with_items: "{{ ovs_bridges }}"
+  with_items: "{{ ifupdown_ovs_bridges }}"
   when: >
-    ovs_bridges | length > 0 and
-    (enable_configured_interfaces_after_defining or item['enable']) and
+    ifupdown_ovs_bridges | length > 0 and
+    (ifupdown_enable_configured_interfaces_after_defining or item['enable']) and
     item['configure'] and
     config_interface['changed']
 
 - name: Restarting OVS Bonds
   ansible.builtin.shell: bash -c "ifdown {{ item.name }} --force && ifup {{ item.name }} --force"
   become: true
-  with_items: "{{ ovs_bonds }}"
+  with_items: "{{ ifupdown_ovs_bonds }}"
   when: >
-    ovs_bonds | length > 0 and
-    (enable_configured_interfaces_after_defining or item['enable']) and
+    ifupdown_ovs_bonds | length > 0 and
+    (ifupdown_enable_configured_interfaces_after_defining or item['enable']) and
     item['configure'] and
     config_interface['changed']
 
 - name: Restarting OVS Interfaces
   ansible.builtin.shell: bash -c "ifdown {{ item.name }} --force && ifup {{ item.name }} --force"
   become: true
-  with_items: "{{ ovs_interfaces }}"
+  with_items: "{{ ifupdown_ovs_interfaces }}"
   when: >
-    ovs_interfaces | length > 0 and
-    (enable_configured_interfaces_after_defining or item['enable']) and
+    ifupdown_ovs_interfaces | length > 0 and
+    (ifupdown_enable_configured_interfaces_after_defining or item['enable']) and
     item['configure'] and
     config_interface['changed']
 
 - name: Restarting OVS Ports
   ansible.builtin.shell: bash -c "ifdown {{ item.name }} --force && ifup {{ item.name }} --force"
   become: true
-  with_items: "{{ ovs_ports }}"
+  with_items: "{{ ifupdown_ovs_ports }}"
   when: >
-    ovs_ports | length > 0 and
-    (enable_configured_interfaces_after_defining or item['enable']) and
+    ifupdown_ovs_ports | length > 0 and
+    (ifupdown_enable_configured_interfaces_after_defining or item['enable']) and
     item['configure'] and
     config_interface['changed']

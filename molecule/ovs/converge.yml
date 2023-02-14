@@ -4,7 +4,7 @@
   vars:
     ifupdown_package: ifupdown
 
-    network_interfaces:
+    ifupdown_network_interfaces:
       - name: eth0
         configure: true
         enable: false
@@ -13,7 +13,7 @@
         address: 10.11.0.10
         netmask: 255.255.0.0
 
-    ovs_bridges:
+    ifupdown_ovs_bridges:
       - name: vmbr0
         configure: true
         enable: false
@@ -24,7 +24,7 @@
           - eth1
           - vlan25
 
-    ovs_interfaces:
+    ifupdown_ovs_interfaces:
       - name: vlan25
         configure: true
         enable: false
@@ -38,7 +38,7 @@
         netmask: 255.255.0.0
         gateway: 10.12.0.254
 
-    ovs_ports:
+    ifupdown_ovs_ports:
       - name: eth1
         configure: true
         enable: false
