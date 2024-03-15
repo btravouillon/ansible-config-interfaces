@@ -52,6 +52,6 @@
             val: native-untagged
 
   tasks:
-    - name: "Include mila-iqia.ifupdown"
+    - name: "Include mila.ifupdown"
       ansible.builtin.include_role:
-        name: "mila-iqia.ifupdown"
+        name: "mila.ifupdown"

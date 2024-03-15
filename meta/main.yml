@@ -1,6 +1,6 @@
 ---
 galaxy_info:
-  namespace: mila-iqia
+  namespace: mila
   role_name: ifupdown
   author: Bruno Travouillon
   description: An [Ansible](https://www.ansible.com) role to configure network interfaces
