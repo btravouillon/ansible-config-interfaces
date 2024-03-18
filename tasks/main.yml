@@ -60,7 +60,7 @@
 - name: Flush handlers
   ansible.builtin.meta: flush_handlers
 
-- name: Restarting Network Interfaces
+- name: Restarting Network Interfaces  # noqa no-changed-when
   ansible.builtin.shell: bash -c "ifdown {{ item.name }} --force && ifup {{ item.name }} --force"
   become: true
   with_items: "{{ ifupdown_network_interfaces }}"
@@ -69,7 +69,7 @@
     item['configure'] and
     config_interface['changed']
 
-- name: Restarting Network VLANs
+- name: Restarting Network VLANs  # noqa no-changed-when
   ansible.builtin.shell: bash -c "ifdown {{ item.name }} --force && ifup {{ item.name }} --force"
   become: true
   with_items: "{{ ifupdown_network_vlans }}"
@@ -79,7 +79,7 @@
     item['configure'] and
     config_interface['changed']
 
-- name: Restarting Network Bridges
+- name: Restarting Network Bridges  # noqa no-changed-when
   ansible.builtin.shell: bash -c "ifdown {{ item.name }} --force && ifup {{ item.name }} --force"
   become: true
   with_items: "{{ ifupdown_network_bridges }}"
@@ -89,7 +89,7 @@
     item['configure'] and
     config_interface['changed']
 
-- name: Restarting OVS Bridges
+- name: Restarting OVS Bridges  # noqa no-changed-when
   ansible.builtin.shell: bash -c "ifdown {{ item.name }} --force && ifup {{ item.name }} --force"
   become: true
   with_items: "{{ ifupdown_ovs_bridges }}"
@@ -99,7 +99,7 @@
     item['configure'] and
     config_interface['changed']
 
-- name: Restarting OVS Bonds
+- name: Restarting OVS Bonds  # noqa no-changed-when
   ansible.builtin.shell: bash -c "ifdown {{ item.name }} --force && ifup {{ item.name }} --force"
   become: true
   with_items: "{{ ifupdown_ovs_bonds }}"
@@ -109,7 +109,7 @@
     item['configure'] and
     config_interface['changed']
 
-- name: Restarting OVS Interfaces
+- name: Restarting OVS Interfaces  # noqa no-changed-when
   ansible.builtin.shell: bash -c "ifdown {{ item.name }} --force && ifup {{ item.name }} --force"
   become: true
   with_items: "{{ ifupdown_ovs_interfaces }}"
@@ -119,7 +119,7 @@
     item['configure'] and
     config_interface['changed']
 
-- name: Restarting OVS Ports
+- name: Restarting OVS Ports  # noqa no-changed-when
   ansible.builtin.shell: bash -c "ifdown {{ item.name }} --force && ifup {{ item.name }} --force"
   become: true
   with_items: "{{ ifupdown_ovs_ports }}"
