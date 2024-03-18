@@ -56,6 +56,12 @@
   become: true
   when: ifupdown_network_interfaces | length > 0
 
+- name: Restart Networking Service
+  ansible.builtin.systemd_service:
+    state: restarted
+    name: networking
+  when: config_interface['changed']
+
 - name: Restarting Network Interfaces
   ansible.builtin.shell: bash -c "ifdown {{ item.name }} --force && ifup {{ item.name }} --force"
   become: true
